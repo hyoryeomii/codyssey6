@@ -237,3 +237,85 @@
 
 
 ▲ 실시간 데이터 수집 검증: GA4 실시간 보고서를 통해 웹사이트 접속자의 조회수(Page View) 및 활성 사용자 이벤트가 실시간으로 정상 수집됨을 확인
+
+## 9. 입력값 검증 및 테스트 사례
+
+다양한 사용자 입력 시나리오에 대해 프론트엔드 유효성 검증 및 백엔드 예외 처리가 정상 동작하는지 테스트를 진행하였습니다.
+
+| 테스트 케이스 | 입력값 예시 | 처리 결과 및 UX 동작 | 스크린샷 |
+| --- | --- | --- | --- |
+| **1. 정상 입력** | 목적: 체력향상 / 체력: 중급 / 시간: 45분 | 백엔드 API 정상 호출 및 Marked.js로 마크다운 루틴 파싱 출력 완료 | <img width="783" height="761" alt="image" src="https://github.com/user-attachments/assets/fa3f771a-36ae-4f4e-b54b-15dd1ac64725" /> |
+| **2. 빈 입력** | 필수 조건 항목 미선택 상태에서 제출 | JS 경고창(`alert`) 출력 및 제출 차단 (`if (!goal || !level || !time)`) | <img width="862" height="441" alt="image" src="https://github.com/user-attachments/assets/d592e52c-85b0-4ef2-915f-78c73bf7e308" /> |
+| **3. 경계값 / 비정상 입력** | 체력: 고급 / 시간: 60분 (최대 조건 및 백엔드 직접 호출) | 백엔드 내 `max_tokens` 상한선 적용으로 과도한 응답 생성 차단 및 3초 내 정상 출력 | <img width="1024" height="574" alt="image" src="https://github.com/user-attachments/assets/afd072e5-bce6-4b76-9dc8-0921850989e5" /> |
+
+
+## 10. 배포 실패 트러블슈팅 및 콘솔/로그 확인 절차
+
+### 10.1 배포 실패 시 콘솔 및 로그 확인 단계
+
+1. **Vercel Build Logs 확인**: Vercel 대시보드 ➔ Projects ➔ Deployments ➔ 실패한 Deployment 선택 ➔ `Building` 탭에서 파이썬 패키지 설치 오류 및 `requirements.txt` 의존성 충돌 로그 검토
+2. **Vercel Serverless Function Logs 확인**: Vercel 대시보드 ➔ `Logs` 메뉴에서 API 호출 시 발생한 `500 Internal Server Error` 또는 Python `Traceback` 오류 메시지 실시간 추적
+3. **브라우저 개발자 도구 (F12) 확인**:
+    - **Console 탭**: JavaScript 실행 에러 및 Marked.js 파싱 에러 확인
+    - **Network 탭**: `/api/generate` 요청의 Status Code(400, 404, 500) 및 Response Payload 내용 검토
+
+### 10.2 재배포 전 체크리스트
+
+- [ ]  `requirements.txt` 패키지명 및 버전 명시 오타 여부 확인
+- [ ]  Vercel Environment Variables에 `OPENAI_API_KEY` 설정 여부 재검증
+- [ ]  로컬 환경에서 API 통신 테스트 성공 확인
+- [ ]  `git status`로 누락된 파일 없이 푸시되었는지 확인
+
+
+## 11. AI 응답 지연 개선 및 비용/쿼터 관리 전략
+
+### 11.1 응답 지연 개선 방안
+
+- **SSE(Server-Sent Events) 스트리밍 도입**: AI 응답을 한 번에 받지 않고 단어 단위로 실시간 출력(`stream=True`)하여 사용자가 체감하는 대기 시간(TTFT)을 3초 이상에서 0.5초 이하로 대폭 단축.
+- **프롬프트 최적화**: System Prompt 규칙을 간결화하고 `max_tokens` 범위를 제한하여 불필요한 토큰 생성 지연 방지.
+
+### 11.2 비용 및 API 쿼터 관리 방안
+
+- **경량화 모델 선택**: `gpt-4o` 대비 비용이 약 90% 저렴한 `gpt-4o-mini` 모델을 기본으로 채택하여 API 비용 최소화.
+- **토큰 상한선 설정**: 백엔드 API 요청 시 `max_tokens: 800`으로 상한선을 설정하여 과도한 토큰 소비 차단.
+- **Rate Limiting (IP 기반 제한)**: 동일 IP에서의 무분별한 연속 생성 요청을 방지하기 위해 일정 시간당 요청 횟수를 제한하는 미들웨어 도입 고려.
+
+## 12. 백엔드 아키텍처 고수준 확장 설계 노트
+
+향후 트래픽 증가 및 서비스 확장을 대비한 백엔드 고수준 설계 전략임
+
+- **캐싱 레이어**: 동일한 조건(예: 다이어트+중급+30분)의 입력 요청은 AI를 다시 호출하지 않고 Redis에 저장된 응답을 즉시 반환하여 API 비용 0원 및 응답 속도 10ms 이하 달성
+- **비동기 큐잉 시스템 (Message Queue)**: 대규모 동시 요청 발생 시 Celery 또는 AWS SQS를 도입하여 백엔드 서버 과부하를 방지하고 요청을 순차 처리
+- **Multi-LLM Fallback 지원**: OpenAI API 장애 발생 시 Claude 3.5 Haiku 또는 Gemini Flash API로 자동 전환되는 복구 회로 구축
+
+
+## 13. API 키 유출 사고 대응 절차
+
+API 키가 외부로 유출되거나 GitHub에 실수로 노출되었을 경우 진행하는 3단계 보안 대응 절차임
+
+1. **1단계: 즉시 키 폐기**
+    - OpenAI 대시보드에 접속하여 유출된 API 키를 **Delete / Revoke** 처리하여 추가 무단 결제 차단
+2. **2단계: 신규 키 발급 및 환경변수 갱신**
+    - 신규 API 키를 재발급받은 뒤, Vercel 대시보드의 Environment Variables 값 수정 및 프로젝트 재배포 진행
+3. **3단계: 영향 범위 조사 및 재발 방지 조치**
+    - OpenAI Usage 대시보드에서 유출 기간 동안의 과금 내역 및 호출 로그 조사
+    - `.gitignore` 파일 재검증 및 Git 커밋 히스토리에 키가 남아있는 경우 `git-filter-repo` 명령어로 완전 삭제
+
+
+## 14. 프레임워크(React/Vue) 전환 분석
+
+Vanilla JS 구조에서 React 또는 Vue.js 같은 SPA 프레임워크로 전환할 경우의 장단점 및 변경 범위 분석
+
+### 14.1 프레임워크 도입 시 장단점
+
+- **장점**:
+    - 컴포넌트 재사용성 증대 및 상태 관리의 용이성 확보
+    - UI 업데이트 시 가상 DOM활용으로 효율적인 렌더링 가능
+- **단점**:
+    - 번들 사이즈 증가로 인한 초기 로딩 속도 저하 가능성
+    - 빌드 파이프라인(Vite, Webpack) 구축에 따른 오버헤드 발생
+
+### 14.2 예상 변경 범위
+
+- **프론트엔드 (전면 재작성)**: HTML/Vanilla JS 코드를 React 컴포넌트(`JSX`)로 변환, `useState`/`useEffect` 기반 상태 및 API 통신 관리 전환
+- **백엔드 (유지)**: 기존 Vercel Serverless Function (`api/generate.py`) 백엔드 구조는 프레임워크 전환과 무관하게 100% 재사용 가능
