@@ -1,0 +1,148 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f5f7fb;
+    color:#333;
+    line-height:1.6;
+}
+
+.container{
+    width:90%;
+    max-width:1000px;
+    margin:auto;
+}
+
+header{
+    background:#2563eb;
+    color:white;
+    padding:18px 0;
+}
+
+header h2{
+    text-align:center;
+}
+
+.hero{
+    text-align:center;
+    padding:80px 20px;
+    background:linear-gradient(135deg,#2563eb,#60a5fa);
+    color:white;
+}
+
+.hero h1{
+    font-size:2.5rem;
+    margin-bottom:20px;
+}
+
+.hero p{
+    max-width:600px;
+    margin:0 auto 30px;
+}
+
+.btn{
+    display:inline-block;
+    background:white;
+    color:#2563eb;
+    text-decoration:none;
+    padding:14px 28px;
+    border-radius:8px;
+    font-weight:bold;
+    transition:.3s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+.generator{
+    padding:70px 20px;
+}
+
+.generator h2{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+form{
+    background:white;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+label{
+    display:block;
+    margin-top:18px;
+    margin-bottom:8px;
+    font-weight:bold;
+}
+
+select{
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    font-size:16px;
+}
+
+button{
+    width:100%;
+    margin-top:30px;
+    padding:14px;
+    border:none;
+    background:#2563eb;
+    color:white;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+#message{
+    margin-top:20px;
+    text-align:center;
+    font-weight:bold;
+}
+
+.faq{
+    padding:70px 20px;
+    background:white;
+}
+
+.faq h2{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.faq-item{
+    margin-bottom:25px;
+    padding:20px;
+    border-left:5px solid #2563eb;
+    background:#f8fafc;
+    border-radius:6px;
+}
+
+@media (max-width:768px){
+
+    .hero{
+        padding:60px 20px;
+    }
+
+    .hero h1{
+        font-size:2rem;
+    }
+
+    form{
+        padding:20px;
+    }
+
+}
