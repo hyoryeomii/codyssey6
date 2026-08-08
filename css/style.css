@@ -146,3 +146,30 @@ button:hover{
     }
 
 }
+
+/* 보너스 과제 */
+
+/* 버튼 눌림 애니메이션 */
+button[type="submit"], .btn-hero {
+    transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+button[type="submit"]:active, .btn-hero:active {
+    transform: scale(0.96);
+}
+
+/* 결과 창 등장 애니메이션 */
+#resultContainer {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
