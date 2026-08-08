@@ -245,7 +245,7 @@
 | 테스트 케이스 | 입력값 예시 | 처리 결과 및 UX 동작 | 스크린샷 |
 | --- | --- | --- | --- |
 | **1. 정상 입력** | 목적: 체력향상 / 체력: 중급 / 시간: 45분 | 백엔드 API 정상 호출 및 Marked.js로 마크다운 루틴 파싱 출력 완료 | <img width="783" height="761" alt="image" src="https://github.com/user-attachments/assets/fa3f771a-36ae-4f4e-b54b-15dd1ac64725" /> |
-| **2. 빈 입력** | 필수 조건 항목 미선택 상태에서 제출 | JS 경고창(`alert`) 출력 및 제출 차단 (`if (!goal || !level || !time)`) | <img width="862" height="441" alt="image" src="https://github.com/user-attachments/assets/86f8a767-8426-4276-b8bc-2a83fd766e46" /> |
+| **2. 빈 입력** | 필수 조건 항목 미선택 상태에서 제출 | JS 경고창(`alert`) 출력 및 제출 차단 (`if (!goal \|\| !level \|\| !time)`) | <img width="862" height="441" alt="image" src="https://github.com/user-attachments/assets/86f8a767-8426-4276-b8bc-2a83fd766e46" /> |
 | **3. 경계값 / 비정상 입력** | 체력: 고급 / 시간: 60분 (최대 조건 및 백엔드 직접 호출) | 백엔드 내 `max_tokens` 상한선 적용으로 과도한 응답 생성 차단 및 3초 내 정상 출력 | <img width="1024" height="574" alt="image" src="https://github.com/user-attachments/assets/afd072e5-bce6-4b76-9dc8-0921850989e5" /> |
 
 
