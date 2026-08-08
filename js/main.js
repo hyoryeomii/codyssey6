@@ -1,5 +1,6 @@
 const form = document.getElementById("routineForm");
 const message = document.getElementById("message");
+const resultContainer = document.getElementById("resultContainer");
 
 form.addEventListener("submit", async function (e) {
 
@@ -18,6 +19,10 @@ form.addEventListener("submit", async function (e) {
 
     message.style.color = "#333";
     message.textContent = "AI가 운동 루틴을 생성하는 중입니다...";
+    
+    // 생성 시작 시 이전 결과 숨기기
+    resultContainer.style.display = "none";
+    resultContainer.innerText = "";
 
     try {
 
@@ -43,14 +48,13 @@ form.addEventListener("submit", async function (e) {
 
         const result = await response.json();
 
-        console.log(result);
-
         message.style.color = "green";
         message.textContent = "운동 루틴 생성이 완료되었습니다!";
 
-        // 추후 결과 출력 영역에 result를 표시하면 됩니다.
-        // 예:
-        // document.getElementById("result").innerText = result.routine;
+        // AI 응답 텍스트 화면 출력
+        const routineText = result.routine || result.result;
+        resultContainer.innerText = routineText;
+        resultContainer.style.display = "block"; // 결과창 노출
 
     } catch (error) {
 
