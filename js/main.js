@@ -53,7 +53,7 @@ form.addEventListener("submit", async function (e) {
 
         // AI 응답 텍스트 화면 출력
         const routineText = result.routine || result.result;
-        resultContainer.innerText = routineText;
+        resultContainer.innerHTML = marked.parse(routineText);
         resultContainer.style.display = "block"; // 결과창 노출
 
     } catch (error) {
