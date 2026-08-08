@@ -21,7 +21,7 @@ form.addEventListener("submit", async function (e) {
 
     try {
 
-        const response = await fetch("/api/generate", {
+        const response = await fetch("/api/generate.py", {
 
             method: "POST",
 
