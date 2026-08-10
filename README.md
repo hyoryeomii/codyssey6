@@ -198,12 +198,12 @@
 ### 7.3 Vercel Serverless Function 및 프론트-백엔드 호출 구조
 
 - **Serverless Function이란**: 별도의 24시간 상시 가동 서버를 구축·관리할 필요 없이, 요청이 들어올 때만 개별 함수(코드)가 실행되는 cloud 아키텍처임
-- **호출 구조**: 프론트엔드(`main.js`)는 동일한 도메인 내의 `/api/generate` 상대 경로로 HTTP POST 요청을 보냅니다. Vercel 내부 라우팅(`vercel.json`)이 이를 받아 Python 백엔드 환경(`api/generate.py`)을 순간적으로 실행하여 OpenAI 통신을 처리하고 결과를 반환함
+- **호출 구조**: 프론트엔드(`main.js`)는 동일한 도메인 내의 `/api/generate` 상대 경로로 HTTP POST 요청을 보냄. Vercel 내부 라우팅(`vercel.json`)이 이를 받아 Python 백엔드 환경(`api/generate.py`)을 순간적으로 실행하여 OpenAI 통신을 처리하고 결과를 반환함
 
 ### 7.4 API 키 환경 변수 관리의 필요성
 
-- **보안 위험성**: OpenAI API 키를 프론트엔드 JavaScript 파일에 직접 작성할 경우, 웹 브라우저의 '소스 보기'나 개발자 도구를 통해 누구에게나 API 키가 노출됩니다.
-- **해결 방안**: API 키를 Vercel 서버리스 서버의 환경 변수(`OPENAI_API_KEY`)로 등록하고 백엔드(Python)에서만 접근하도록 설계하여, 외부 노출 및 도용으로 인한 무단 비용 청구를 방지합니다.
+- **보안 위험성**: OpenAI API 키를 프론트엔드 JavaScript 파일에 직접 작성할 경우, 웹 브라우저의 '소스 보기'나 개발자 도구를 통해 누구에게나 API 키가 노출
+- **해결 방안**: API 키를 Vercel 서버리스 서버의 환경 변수(`OPENAI_API_KEY`)로 등록하고 백엔드(Python)에서만 접근하도록 설계하여, 외부 노출 및 도용으로 인한 무단 비용 청구를 방지
 
 ### 7.5 로컬 환경 vs 배포 환경 및 수정·재배포 흐름
 
